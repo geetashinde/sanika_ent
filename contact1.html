@@ -1,0 +1,805 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" lang="EN" dir="ltr">
+<head profile="http://gmpg.org/xfn/11">
+<title>Darkness</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta http-equiv="imagetoolbar" content="no" />
+<link rel="stylesheet" href="styles/layout.css" type="text/css" />
+<meta charset="utf-8">
+<link rel="stylesheet" href="css/reset.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css/css.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css/grid.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css/prettyPhoneoto.css" type="text/css" media="screen">
+<script src="js/jquery-1.7.1.min.js" type="text/javascript"></script>
+<script src="js/cufon-yui.js" type="text/javascript"></script>
+<script src="js/cufon-replace.js" type="text/javascript"></script>
+<script src="js/Vegur_500.font.js" type="text/javascript"></script>
+<script src="js/FF-cash.js" type="text/javascript"></script>
+<script src="js/jquery.prettyPhoneoto.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function () {
+    $(".lightbox").append("<span></span>");
+    $("a[data-gal^='prettyVideo']").prettyPhoneoto({
+        animation_speed: 'normal',
+        theme: 'facebook',
+        slideshow: false,
+        autoplay_slideshow: false
+    });
+});
+</script>
+<style type="text/css" media="screen">@import url('css/stylemenu.css');</style>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+
+	<script type="text/javascript">
+		$(function() {
+			//We initially hide the all dropdown menus
+			$('#dropdown_nav li').find('.sub_nav').hide();
+
+			//When hovering over the main nav link we find the dropdown menu to the corresponding link.
+			$('#dropdown_nav li').hover(function() {
+				//Find a child of 'this' with a class of .sub_nav and make the beauty fadeIn.
+				$(this).find('.sub_nav').fadeIn(100);
+			}, function() {
+				//Do the same again, only fadeOut this time.
+				$(this).find('.sub_nav').fadeOut(50);
+			});
+		});
+	</script>
+<script type="text/javascript" src="js/jquery-1.3.2.js"></script>
+<script type="text/javascript" src="js/jquery.livequery.js"></script>
+<link href="css.css" rel="stylesheet" />
+<script type="text/javascript">
+$(document).ready(function() {
+	
+	var Arrays=new Array();
+	
+	$('.add-to-cart-button').click(function(){
+		
+		var thisID 	  = $(this).parent().parent().attr('id').replace('detail-','');
+		
+		var itemname  = $(this).parent().find('.item_name').html();
+		var itemprice = $(this).parent().find('.price').html();
+		
+		if(include(Arrays,thisID))
+		{
+			var price 	 = $('#each-'+thisID).children(".shopp-price").find('em').html();
+			var quantity = $('#each-'+thisID).children(".shopp-quantity").html();
+			quantity = parseInt(quantity)+parseInt(1);
+			
+			var total = parseInt(itemprice)*parseInt(quantity);
+			
+			$('#each-'+thisID).children(".shopp-price").find('em').html(total);
+			$('#each-'+thisID).children(".shopp-quantity").html(quantity);
+			
+			var prev_charges = $('.cart-total span').html();
+			prev_charges = parseInt(prev_charges)-parseInt(price);
+			
+			prev_charges = parseInt(prev_charges)+parseInt(total);
+			$('.cart-total span').html(prev_charges);
+			
+			$('#total-hidden-charges').val(prev_charges);
+		}
+		else
+		{
+			Arrays.push(thisID);
+			
+			var prev_charges = $('.cart-total span').html();
+			prev_charges = parseInt(prev_charges)+parseInt(itemprice);
+			
+			$('.cart-total span').html(prev_charges);
+			$('#total-hidden-charges').val(prev_charges);
+			
+			var Height = $('#cart_wrapper').height();
+			$('#cart_wrapper').css({height:Height+parseInt(45)});
+			
+			$('#cart_wrapper .cart-info').append('<div class="shopp" id="each-'+thisID+'"><div class="label">'+itemname+'</div><div class="shopp-price"> $<em>'+itemprice+'</em></div><span class="shopp-quantity">1</span><img src="remove.png" class="remove" /><br class="all" /></div>');
+			
+		}
+		
+	});	
+	
+	$('.remove').livequery('click', function() {
+		
+		var deduct = $(this).parent().children(".shopp-price").find('em').html();
+		var prev_charges = $('.cart-total span').html();
+		
+		var thisID = $(this).parent().attr('id').replace('each-','');
+		
+		var pos = getpos(Arrays,thisID);
+		Arrays.splice(pos,1,"0")
+		
+		prev_charges = parseInt(prev_charges)-parseInt(deduct);
+		$('.cart-total span').html(prev_charges);
+		$('#total-hidden-charges').val(prev_charges);
+		$(this).parent().remove();
+		
+	});	
+	
+	$('#Submit').livequery('click', function() {
+		
+		var totalCharge = $('#total-hidden-charges').val();
+		
+		$('#cart_wrapper').html('Total Charges: $'+totalCharge);
+		
+		return false;
+		
+	});	
+	
+	// this is for 2nd row's li offset from top. It means how much offset you want to give them with animation
+	var single_li_offset 	= 100;
+	var current_opened_box  = -1;
+	
+	$('#wrap li').click(function() {
+	
+		var thisID = $(this).attr('id');
+		var $this  = $(this);
+		
+		var id = $('#wrap li').index($this);
+		
+		if(current_opened_box == id) // if user click a opened box li again you close the box and return back
+		{
+			$('#wrap .detail-view').slideUp('slow');
+			return false;
+		}
+		$('#cart_wrapper').slideUp('slow');
+		$('#wrap .detail-view').slideUp('slow');
+		
+		// save this id. so if user click a opened box li again you close the box.
+		current_opened_box = id;
+		
+		var targetOffset = 0;
+		
+		// below conditions assumes that there are four li in one row and total rows are 4. How ever if you want to increase the rows you have to increase else-if conditions and if you want to increase li in one row, then you have to increment all value below. (if(id<=3)), if(id<=7) etc
+		
+		if(id<=3)
+			targetOffset = 0;
+		else if(id<=7)
+			targetOffset = single_li_offset;
+		else if(id<=11)
+			targetOffset = single_li_offset*2;
+		else if(id<=15)
+			targetOffset = single_li_offset*3;
+		
+		$("html:not(:animated),body:not(:animated)").animate({scrollDown: targetOffset}, 800,function(){
+			
+			$('#wrap #detail-'+thisID).slideDown(800);
+			return false;
+		});
+		
+	});
+	
+	$('.close a').click(function() {
+		
+		$('#wrap .detail-view').slideUp('slow');
+		
+	});
+	
+	$('.closeCart').click(function() {
+		
+		$('#cart_wrapper').slideUp();
+		
+	});
+	
+	$('#show_cart').click(function() {
+		
+		$('#cart_wrapper').slideToggle('slow');
+		
+	});
+	
+});
+
+function include(arr, obj) {
+  for(var i=0; i<arr.length; i++) {
+    if (arr[i] == obj) return true;
+  }
+}
+
+function getpos(arr, obj) {
+  for(var i=0; i<arr.length; i++) {
+    if (arr[i] == obj) return i;
+  }
+}
+
+</script>
+</head>
+<body id="top">
+<div class="wrapper">
+  <div id="header">
+    <div id="logo">
+    <p>
+     <a href="#"><img src="images/imgs/logo.png" alt=""width="100" height="100"/></a></p>
+<p>     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ <h2><font color="#FFFFFF" size="+2"<a href="#"><br />&nbsp;&nbsp;&nbsp;SANIKA ENTERPRISES</font> </a></h2>
+     <font size="+1">&nbsp;&nbsp; Quality & Services</font></p>
+     
+    </div>
+    <div id="topnav">
+      <ul>
+        <li class="active"><a href="index.html">Home</a></li>
+        <li><a href="aboutus.html">About Us</a></li>
+        <li><a href="product.html">Products</a></li>
+     
+        <li class="last"><a href="#">Contact Us</a></li>
+      </ul>
+    </div>
+    <br class="clear" />
+  </div>
+</div>
+    <br class="clear" />
+  </div>
+</div>
+<!-------************--------->
+<section id="content">
+      <div class="main">
+        <div class="container_12">
+          
+          <div class="container-bot">
+            <div class="container-top">
+              <div class="container">
+                <div id="wrap" align="center" class="product">
+    
+		<ul>
+			<li id="1">
+			<img src="imgs/cmt.png" class="" height="150" alt="" />
+				
+				<br clear="all" />
+				<div>CLASSIC MODELS TABLE TOP</div>
+			</li>
+			
+			<li id="2">
+			<img src="imgs/em.png"  height="150" alt="" />
+				
+				<br clear="all" />
+				<div>EASY MODELS</div>
+			</li>
+			
+			<li id="3">
+				<img src="imgs/hm.png"  height="150" alt="" />
+				
+				<br clear="all" />
+				<div>HANGING SCALE MODELS</div>
+			</li>
+			<li id="4">
+				<img src="imgs/jm.png"  height="150" alt="" />
+				
+				<br clear="all" />
+				<div>JUMBO MODELS</div>
+			</li>
+            
+			
+			<!-- Detail Boxes for above four li -->
+			
+			<div class="detail-view" id="detail-1">
+			
+				<div class="close" align="right">
+					<a href="javascript:void(0)">x</a>
+					
+				</div>
+				
+				<img src="imgs/cmt.png" class="detail_images" class="pro" width="340" height="310" alt="" />
+				
+				<div class="detail_info">
+					
+					<label class='item_name'><font color="#FFFFFF">CLASSIC MODELS TABLE TOP</font></label>					
+					
+					<p>
+                  
+Owing to our microprocessor based technology.<br>
+ we have been able to fabricate Classic Weighing Machine known for its high accuracy and compant Design.
+
+
+					</p>
+					
+					<br clear="all" />
+					
+				</div>
+				
+				
+			</div>
+			<div class="detail-view" id="detail-2">
+				
+				<div class="close" align="right">
+					<a href="javascript:void(0)">x</a>
+					
+				</div>
+				
+				<img src="imgs/em.png" class="detail_images" width="340" height="310" alt="" />
+				
+				<div class="detail_info">
+					
+					<label class='item_name'><font color="#FFFFFF">EASY MODELS</font></label>
+					
+					
+					<p>
+						
+Weighing Scale available with us is highly acclaimed all across the world due to its compact design, sturdy construction, digital display and longer functioning life. These Scales are fabricated using high-grade raw material and can be customized as per the requirement of our clients.
+
+					
+						<br clear="all" /><br clear="all" />
+						
+						
+					</p>
+					
+					<br clear="all" />
+					
+									
+				</div>
+				
+			</div>
+			<div class="detail-view" id="detail-3">
+				
+				<div class="close" align="right">
+					<a href="javascript:void(0)">x</a>
+					
+				</div>
+				
+				<img src="imgs/hm.png" class="detail_images" width="340" height="310" alt="" />
+				
+				<div class="detail_info">
+					
+					<label class='item_name'><font color="#FFFFFF">HANGING SCALE MODELS</font></label>
+					
+					
+
+					<p>
+					
+Our Valued clients can avail from us high quality Hanging Scale that are manufactured by several reowned companies in the industry. These manufactures make use of optimal grade material and high-tech machinery for designing these machines. Thus, all our machines are adherence with the intermational quality standards and guidelines.
+
+
+						<br clear="all" /><br clear="all" />
+						
+						
+					</p>
+					
+					<br clear="all" />
+					
+					
+					
+				</div>
+				
+			</div>
+			<div class="detail-view" id="detail-4">
+				
+				<div class="close" align="right">
+					<a href="javascript:void(0)">x</a>
+					
+				</div>
+				
+				<img src="imgs/jm.png" class="detail_images" width="340" height="310" alt="" />
+				
+				<div class="detail_info">
+					
+					<label class='item_name'><font color="#FFFFFF">JUMBO MODELS</font></label>
+					
+					
+					<p>
+					
+Specially Designed heavy duty platform scale we offer to client have sturdy mechanical structure, which makes them perfect for various industrial application in: Aluminum, steel, copper and metal markets.
+•	 
+
+
+
+					
+						<br clear="all" /><br clear="all" />
+						
+						
+					</p>
+					
+					<br clear="all" />
+					
+					
+					
+				</div>
+				
+			</div>
+            <li id="5">
+				<img src="imgs/ssm.png" class="" height="150" alt="" />
+				
+				<br clear="all" />
+				<div>SUMO SCALE MODELS</div>
+			</li>
+			
+
+			<li id="6">
+				<img src="imgs/us.png" class="" height="150" alt="" />
+				
+				<br clear="all" />
+				<div>UNIQUE SCALE MODELS</div>
+			</li>
+			
+			<li id="7">
+				<img src="imgs/um.png" class="" height="150" alt="" />
+				
+				<br clear="all" />
+				<div>UNIVERSAL MODELS</div>
+			</li>
+            <li id="8">
+				<img src="imgs/ns.jpg" class="" height="150" alt="" />
+				
+				<br clear="all" />
+				<div>ST-300</div>
+			</li>
+			
+			
+			
+			<!-- Detail Boxes for above four li -->
+			
+			<div class="detail-view" id="detail-5">
+				
+				<div class="close" align="right">
+					<a href="javascript:void(0)">x</a>
+					
+				</div>
+				
+				<img src="imgs/ssm.png" class="detail_images" width="340" height="310" alt="" />
+				
+				<div class="detail_info">
+					
+					<label class='item_name'><font color="#FFFFFF">SUMO SCALE MODELS</font></label>
+					
+					
+					<p>
+					
+
+The heavy Duty Weighing Scale has been designed by us to calculate heavy impact & other parameres for calculation precise wright of the object.
+
+
+
+						<br clear="all" /><br clear="all" />
+						
+						
+					</p>
+					
+					<br clear="all" />
+					
+					
+					
+				</div>
+				
+			</div>
+			<div class="detail-view" id="detail-6">
+				
+				<div class="close" align="right">
+					<a href="javascript:void(0)">x</a>
+					
+				</div>
+				
+				<img src="imgs/us.png" class="detail_images" width="340" height="310" alt="" />
+				
+				<div class="detail_info">
+					
+					<label class='item_name'><font color="#FFFFFF">UNIQUE SCALE MODELS</font></label>
+					
+					
+					<p>
+             
+A Complete series of a very high accuracy based on a microprocessor Card, constructed dyly in ABS unbreakable material. All models are built in with multi function facalities.
+						<br clear="all" /><br clear="all" />
+						
+					</p>
+					
+					<br clear="all" />
+					
+					
+				</div>
+				
+			</div>
+			<div class="detail-view" id="detail-7">
+				
+				<div class="close" align="right">
+					<a href="javascript:void(0)">x</a>
+					
+				</div>
+				
+				<img src="imgs/um.png" class="detail_images" width="340" height="310" alt="" />
+				
+				<div class="detail_info">
+					
+					<label class='item_name'><font color="#FFFFFF">UNIVERSAL MODELS</font></label>
+					
+					
+					<p>
+						
+A Bench Scale Series, based on microprocessor baed technology, with rugged high quality fabricated construction, with stand(Optional-Attached Stand). All Models have buir in multifunction facalities such as listedL
+
+
+
+					
+						<br clear="all" /><br clear="all" />
+						
+					</p>
+					
+					<br clear="all" />
+					
+					
+				</div>
+				
+			</div>
+            <div class="detail-view" id="detail-8">
+				
+				<div class="close" align="right">
+					<a href="javascript:void(0)">x</a>
+					
+				</div>
+				
+				<img src="imgs/ns.jpg" class="detail_images" width="340" height="310" alt="" />
+				
+				<div class="detail_info">
+					
+					<label class='item_name'><font color="#FFFFFF">ST-3000</font> </label>
+					
+					
+					<p>
+                    <b><u>Features</u></b> <br>
+•	Counting and Detecting(Manually) separately.<br>
+•	Newly-developed and stylish.<br>
+•	Compact and light-weighted.<br>
+•	With UV (ultraviolet), MG (magnetic) and WM (watermark) Detection.<br>
+•	Suitable for most currencies in the world.<br>
+•	Suitable for Indian Currency(Tested)<br>
+•	With "Addition" function.<br>
+•	1 Year Warranty<br>
+
+
+
+					</p>
+                    
+                        
+					
+					<br clear="all" />
+					
+					
+					
+				</div>
+				
+			</div>
+            <li id="9">
+				<img src="imgs/nt1.jpg" class="" height="150" alt="" />
+				
+				<br clear="all" />
+				<div><span class="name">V-70</span><span class="price"></span></div>
+			</li>
+			
+			<li id="10">
+				<img src="imgs/nt2.jpg" class="" height="150" alt="" />
+				
+				<br clear="all" />
+				<div><span class="name">ST-2700 </span> </div>
+			</li>
+			
+			<li id="11">
+				<img src="imgs/n3.jpg" class="" height="150" alt="" />
+				
+				<br clear="all" />
+				<div>ST-2300</div>
+			</li>
+            <li id="12">
+				<img src="imgs/n7.jpg" class="" height="150" alt="" />
+				
+				<br clear="all" />
+				<div>ST-2800</div>
+			</li>
+            <div class="detail-view" id="detail-9">
+				
+				<div class="close" align="right">
+					<a href="javascript:void(0)">x</a>
+					
+				</div>
+				
+				<img src="imgs/nt1.jpg" class="detail_images" width="340" height="310" alt="" />
+				
+				<div class="detail_info">
+					
+					<label class='item_name'><font color="#FFFFFF">V-70 </font></label>
+					
+					<p>
+						<b><u>Features</u></b><br>
+
+
+  <b><u> Technical Parameters</u></b>:-Power supply <br>
+  <b><u> Frequency</u></b>:AC 100v ~ 240v 50 / 60 Hz DC 12V<br>
+  <b><u>Power consumption</u></b>:= 4W (max)AC Current:= 0.15A (max)<br>
+  <b><u>Counting Speed</u></b> := 600 pcs / min<br>
+  <b><u>Size of countable note</u></b>:50 ~ 100 W:90 ~ 168<br>
+  <b><u>Thickness of countable note</u></b>:
+0.075mm ~ 0.15mm
+
+
+					
+						<br clear="all" /><br clear="all" />
+						
+					</p>
+					
+					<br clear="all" />
+					
+					
+					
+				</div>
+				
+			</div>
+			<div class="detail-view" id="detail-10">
+				
+				<div class="close" align="right">
+					<a href="javascript:void(0)">x</a>
+					
+				</div>
+				
+				<img src="imgs/nt2.jpg" class="detail_images" width="340" height="310" alt="" />
+				
+				<div class="detail_info">
+					
+					<label class='item_name'><font color="#FFFFFF">ST-2700</font> </label>
+					
+					<p>
+                    <b><u>Features</u></b><br>
+						
+<b><u>Counting speed</u></b>: >1,000 pieces/min<br>
+<b><u>Size of countable note</u></b>: 50 x 110 to 90 x 180mm<br>
+<b><u>Dimensions</u></b>: 289 x 240 x 155mm<br>
+<b><u>Net weight</u></b>: 5.7kg<br>
+<b><u>Power supply</u></b>: 230V AC 50Hz, 120V AC 60Hz<br>
+<b><u>Power consumption</u></b>: 70W<br>
+Automatic detecting with UV (ultraviolet) while counting<br>
+Suitable for most currencies in the world<br>
+Automatic start, stop and clearing<br>
+With batching, adding and self-examination functions<br>
+
+
+
+
+
+					
+						<br clear="all" /><br clear="all" />
+						
+					</p>
+					
+					<br clear="all" />
+					
+					
+					
+				</div>
+				
+			</div>
+			<div class="detail-view" id="detail-11">
+				
+				<div class="close" align="right">
+					<a href="javascript:void(0)">x</a>
+					
+				</div>
+				
+				<img src="imgs/n3.jpg" class="detail_images" width="340" height="310" alt="" />
+				
+				<div class="detail_info">
+					
+					<label class='item_name'><font color="#FFFFFF">ST-2300</font></label>
+					
+					<p>
+						<b><u>Features</u></b><br>
+ 1) Counting speed: >600pcs/min <br>
+2) Power supply: 100 ~ 240V, 50 ~ 60Hz AC/DC adapter <br>
+3) Power consumption: 4W <br>
+4) Dimensions: 195 x 177 x 100mm <br>
+5) Weight: 0.7kg<br>
+
+
+					<br clear="all" /><br clear="all" />
+					</p>
+					
+					<br clear="all" />
+					
+					
+					
+				</div>
+				
+			</div> 
+                       
+            
+			<div class="detail-view" id="detail-12">
+				
+				<div class="close" align="right">
+					<a href="javascript:void(0)">x</a>
+					
+				</div>
+				
+				<img src="imgs/n7.jpg" class="detail_images" width="340" height="310" alt="" />
+				
+				<div class="detail_info">
+					
+					<label class='item_name'><font color="#FFFFFF">ST-2800</font></label>
+					
+					<p>
+						<b><u>Features</u></b><br>
+ 1) Counting speed: >1000pcs/min <br>
+2) Power supply: 100 ~ 240V, 50 ~ 60Hz AC/DC adapter <br>
+3) Power consumption: 4W <br>
+4) Dimensions: 298x 263 x 215mm <br>
+5) Net Weight: 5.4kg<br>
+
+
+					<br clear="all" /><br clear="all" />
+					</p>
+					
+					<br clear="all" />
+					
+					
+					
+				</div>
+				
+			</div>
+
+            
+			<!---->
+			
+
+
+<!-------************--------->
+<div class="wrapper">
+
+    </div>
+    <br class="clear" />
+  </div>
+</div>
+<div class="wrapper">
+  
+    <br class="clear" />
+  </div>
+</div>
+<div class="wrapper">
+  <div id="footer">
+    <div id="newsletter">
+    
+      
+    </div>
+    <div class="footbox" >
+    <h2>Legal</h2>
+      <ul>
+        <li><a href="#" class="link">Copyright &copy; Vertex</a></li><br>
+        <li><a href="#">All Rights Reserved</a></li><br>
+        <li><a href="#">Design by <a target="_blank" href="http://www.wavetechline.com/" class="link">wavetechline.com</a></a></li>
+        
+       
+      </ul>
+      </div>
+      <div class="footbox" >
+      <h2>Contacts</h2>
+      <ul>
+        <li><a href="#">Tel : 0253-319 1555/651 1555</a></li>
+        <li><a href="#">Mobile : +91-9822661555<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+91-9225101555</a></li>
+        <li><a href="#">Email : sanikaenterprises@yahoo.co.in</a></li>
+        
+      </ul>
+    </div>
+    <div class="footbox">
+      <h2>Address</h2>
+      <ul >
+        <li><a href="#">Sanika Enterprises</a></li>
+        <li><a href="#">Shop No 3 & 5,MSB School Building,</a></li>
+        <li><a href="#">Takali Road Chowk,</a></li>
+        <li><a href="#">Mumbai Agra Road,</a></li>
+        <li><a href="#">Dwarka,Nashik.</a></li>
+        <li class="last"><a href="#">Maharashtra, India.</a></li>
+      </ul>
+    </div>
+    <div class="footbox">
+      <h2>Navigation</h2>
+      <ul style="list-style-type:circle ;">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="aboutus.html">About Us</a></li>
+        <li><a href="product.html">Products</a></li>
+        <li><a href="contact.html">Contact US</a></li>
+       
+      </ul>
+    </div>
+    <br class="clear" />
+  </div>
+</div>
+<div class="wrapper">
+  <div id="copyright">
+    <p class="fl_left">Copyright &copy; 2013 - All Rights Reserved - <a href="#">Sanika Enterprises</a></p>
+    <p class="fl_right">Design by <a href="http://www.wavetechline.com/">wavetechline.com</a></p>
+    <br class="clear" />
+  </div>
+</div>
+</body>
+</html>
