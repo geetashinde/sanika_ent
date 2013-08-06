@@ -48,6 +48,7 @@ Licence: <a href="http://www.os-templates.com/template-terms">Website Template L
 
 /* ----------------------------------------------Column Navigation-------------------------------------*/
 
+<<<<<<< HEAD
 #column .subnav
 {
 	display:block; width:250px;
@@ -57,6 +58,9 @@ Licence: <a href="http://www.os-templates.com/template-terms">Website Template L
 	   float:left;
 	 
 	   }
+=======
+#column .subnav{display:block; width:250px; padding:25px; background-color:#1F1F1F; margin-bottom:30px;float:left;}
+>>>>>>> 7b67cdd0187c2492bf47867436e48a9409b9a0b7
 
 #column .subnav h2{
 	margin:0 0 20px 0;
@@ -70,10 +74,13 @@ Licence: <a href="http://www.os-templates.com/template-terms">Website Template L
 	border-bottom:1px dashed #666666;
 	float:left;
 	}
+<<<<<<< HEAD
 .img1 img{
 	height:347px;
 	width:642px;
 }
+=======
+>>>>>>> 7b67cdd0187c2492bf47867436e48a9409b9a0b7
 
 #column .subnav ul{
 	margin:0;
